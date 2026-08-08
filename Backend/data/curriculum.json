@@ -1,0 +1,45 @@
+{
+  "day13": {
+    "topic": "Neural Architecture Search",
+    "description": "Differentiable Architecture Search (DARTS) and continuous relaxation.",
+    "ground_truth": {
+      "key_concept": "DARTS transforms the discrete search space of candidate operations into a continuous space by placing a softmax distribution over all possible operations.",
+      "benefits": "Enables joint optimization of weights and architecture via standard gradient descent.",
+      "drawbacks": "High memory consumption during search, potential performance collapse due to skip-connection dominance."
+    },
+    "dpp_questions": [
+      {
+        "id": 1,
+        "text": "In the context of differentiable Neural Architecture Search (e.g., DARTS), how does the continuous relaxation of the architecture representation resolve the non-differentiability of the discrete search space?",
+        "options": [
+          "(A) By applying REINFORCE to estimate the gradients.",
+          "(B) By replacing discrete categorical choices with a softmax over all possible operations.",
+          "(C) By utilizing evolutionary algorithms.",
+          "(D) By quantizing the model weights."
+        ],
+        "correct_option": 1
+      }
+    ]
+  },
+  "day14": {
+    "topic": "Scaled Dot-Product Attention",
+    "description": "Core mechanics of the self-attention mechanism in Transformers.",
+    "ground_truth": {
+      "key_concept": "Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) * V",
+      "scaling_factor": "The dot products grow large in magnitude for large d_k, pushing the softmax function into regions where it has extremely small gradients. Scaling by sqrt(d_k) counteracts this effect."
+    },
+    "dpp_questions": [
+      {
+        "id": 1,
+        "text": "Why do we scale the dot product of Queries and Keys by the square root of the key dimension in Transformer attention?",
+        "options": [
+          "(A) To reduce computational complexity.",
+          "(B) To prevent the dot products from growing too large and pushing the softmax into regions with vanishing gradients.",
+          "(C) To normalize the length of the value vectors.",
+          "(D) To enforce sparsity in the attention weights."
+        ],
+        "correct_option": 1
+      }
+    ]
+  }
+}

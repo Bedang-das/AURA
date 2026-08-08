@@ -1,0 +1,14 @@
+{
+  "candidates": [
+    {
+      "id": "jd_123",
+      "name": "Jane Doe",
+      "historical_dpp_scores": {
+        "day1": 100,
+        "day13": 60,
+        "day14": 40
+      },
+      "weak_topics": ["day13", "day14"]
+    }
+  ]
+}

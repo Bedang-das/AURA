@@ -68,7 +68,7 @@ export default function CapstoneInterviewPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-paper px-4 md:px-8 max-w-[1400px] mx-auto w-full" style={{ minHeight: 'calc(100vh - 120px)' }}>
+    <div className="flex-1 flex flex-col h-full bg-paper px-4 md:px-8 pt-40 max-w-[1400px] mx-auto w-full" style={{ minHeight: 'calc(100vh - 120px)' }}>
       
       {/* Header for Mobile */}
       <header className="md:hidden flex justify-between items-center mb-6 py-4">

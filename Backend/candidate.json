@@ -1,0 +1,11 @@
+{
+  "candidates": [
+    {
+      "id": "CAND-001",
+      "name": "Test Engineer",
+      "jobRole": "Senior Data Engineer",
+      "skipped_topics": [29],
+      "weak_topics": [12, 14, 15]
+    }
+  ]
+}

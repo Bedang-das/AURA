@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatBox, { Message } from "@/components/ChatBox";
 import FeedbackDashboard from "@/components/FeedbackDashboard";
 
@@ -9,13 +9,40 @@ export default function CapstoneInterviewPage() {
     {
       id: "1",
       role: "agent",
-      content: "Let's dive into the attention mechanism. How would you describe the core computation in a standard transformer block, particularly regarding how queries, keys, and values interact?"
+      content: "Initializing AURA Environment..."
     }
   ]);
   const [isWaiting, setIsWaiting] = useState(false);
   const [questionCount, setQuestionCount] = useState(1);
   const [isComplete, setIsComplete] = useState(false);
   const [score, setScore] = useState(88); // Mock score for UI
+
+  const [sessionId] = useState(() => "sess-" + Math.random().toString(36).substring(7));
+  const candidateId = "CAND-001";
+
+  // Initial load
+  useEffect(() => {
+    const startInterview = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId, candidateId })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setMessages([{
+            id: Date.now().toString(),
+            role: "agent",
+            content: data.reply
+          }]);
+        }
+      } catch (err) {
+        console.error("Failed to start", err);
+      }
+    };
+    startInterview();
+  }, [sessionId]);
 
   const handleSendMessage = async (text: string) => {
     const newMessage: Message = {
@@ -28,42 +55,38 @@ export default function CapstoneInterviewPage() {
     setIsWaiting(true);
     
     try {
-      const res = await fetch("http://localhost:8000/api/interview", {
+      const res = await fetch("http://localhost:8000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: newMessage.content, topic: "day14" })
+        body: JSON.stringify({ sessionId, message: newMessage.content })
       });
       
-      const nextCount = questionCount + 1;
-      
-      if (nextCount > 8) {
-        setIsWaiting(false);
-        setIsComplete(true);
-        return;
-      }
-
       if (res.ok) {
         const data = await res.json();
         setMessages(prev => [...prev, {
           id: (Date.now() + 1).toString(),
           role: "agent",
-          content: data.agent_response
+          content: data.reply
         }]);
+        if (data.done) {
+          setIsComplete(true);
+        }
+        if (data.rolling_avg !== undefined) {
+          setScore(Math.round(data.rolling_avg * 10));
+        }
       } else {
         throw new Error("Failed to fetch");
       }
       
-      setQuestionCount(nextCount);
+      setQuestionCount(prev => prev + 1);
     } catch (error) {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: "agent",
-        content: "Error: Could not connect to the AURA Critic Engine. Please check if the backend is running."
+        content: "Error: Could not connect to the AURA Engine. Please check if the backend is running."
       }]);
     } finally {
-      if (questionCount < 8) {
-        setIsWaiting(false);
-      }
+      setIsWaiting(false);
     }
   };
 
@@ -161,7 +184,7 @@ export default function CapstoneInterviewPage() {
                    <span className="material-symbols-outlined text-[20px]">smart_toy</span>
                  </div>
                  <div>
-                   <h2 className="font-serif text-espresso font-bold text-xl tracking-tight">Phase 3 Interview</h2>
+                   <h2 className="font-serif text-espresso font-bold text-xl tracking-tight">Phase 3 Exercise</h2>
                    <p className="font-sans text-terracotta font-medium text-[13px] mt-0.5">Aura Critic Engine</p>
                  </div>
               </div>

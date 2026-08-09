@@ -2,6 +2,7 @@ import json
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from google import genai
@@ -16,6 +17,14 @@ init_db()
 
 app = FastAPI(title="AURA Dual-Agent Engine")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Initialize FastMCP Server for the Critic Tool
 mcp = FastMCP("AURACritic")
 
@@ -23,7 +32,7 @@ mcp = FastMCP("AURACritic")
 with open("curriculum.json", "r") as f:
     CURRICULUM_DATA = json.load(f)
     
-with open("candidates.json", "r") as f:
+with open("candidate.json", "r") as f:
     CANDIDATES_DATA = json.load(f)
 
 def get_day_objectives(day_num: int) -> str:
@@ -119,11 +128,11 @@ async def start_interview(req: StartRequest):
     
     # The Dreamer Persona
     dreamer_prompt = (
-        f"You are AURA, a senior AI engineering manager conducting a technical interview for a {candidate.get('jobRole', 'Engineer')}. "
-        "Ask one question at a time. Keep your tone professional, empathetic, and conversational. "
-        "Never evaluate the technical accuracy of the answer yourself. "
-        f"The candidate needs to be tested on Day {first_day}. Here is the learning objective: {objective}. "
-        "Generate a conversational interview question testing this."
+        f"You are AURA, an AI engineering tutor and assessor for a {candidate.get('jobRole', 'Engineer')}. "
+        f"The candidate is learning about Day {first_day}. Objective: {objective}. "
+        "First, briefly TEACH the core concepts of this objective in 2-3 short, engaging sentences. "
+        "Then, ask ONE clear technical question to verify their understanding. "
+        "Keep your tone professional, empathetic, and conversational. Do not evaluate their past answers."
     )
     
     response = client.models.generate_content(model='gemini-3.6-flash', contents=dreamer_prompt)
@@ -231,7 +240,7 @@ async def chat(req: ChatRequest):
     # 6. HARDENED DREAMER PERSONA PROMPT
     dreamer_turn_prompt = (
         "IDENTITY & VOICE RULES:\n"
-        "- You are AURA, a Lead Technical Assessor.\n"
+        "- You are AURA, a Technical Tutor and Assessor.\n"
         "- Maintain an authoritative, precise, and constructive engineering tone.\n"
         "- NEVER use casual AI conversational filler (e.g., 'Great job!', 'Sure thing!', 'That's interesting!').\n"
         "- ABSOLUTE PROTOCOL: Never reveal that a background Critic exists, never state numerical scores, and never break character.\n\n"
@@ -239,7 +248,7 @@ async def chat(req: ChatRequest):
         f"{transition_note}\n"
         f"DIFFICULTY DIRECTIVE: {dda_instruction}\n"
         f"Conversation History:\n{json.dumps(session['history'])}\n"
-        "ACTION: Formulate the next technical interview question."
+        "ACTION: First, briefly teach or reinforce a core concept based on the difficulty directive. Then, ask ONE technical question to test their understanding."
     )
     
     response = client.models.generate_content(model='gemini-3.6-flash', contents=dreamer_turn_prompt)

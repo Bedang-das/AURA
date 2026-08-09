@@ -78,10 +78,10 @@ export default async function LearnPage({ params }: { params: { id: string } }) 
         <div className="mt-16 text-center pt-8 border-t border-black/5">
           <p className="text-gray-500 text-sm mb-6 font-medium">Ready to test your knowledge on {dayData.title}?</p>
           <Link 
-            href={`/day/${dayData.day}`}
+            href={`/interview/exercise`}
             className="inline-flex items-center gap-2 bg-[#CC6644] hover:bg-[#b55539] text-[#FDFCF8] font-medium px-8 py-4 rounded-full transition-all shadow-sm"
           >
-            Take the Daily Exam <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            Start Exercise <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </Link>
         </div>
         

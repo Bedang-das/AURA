@@ -22,8 +22,7 @@ export default function Navbar() {
   }, []);
 
   const isDashboard = pathname === "/dashboard";
-  const isExam = pathname?.startsWith("/day/");
-  const isCapstone = pathname?.startsWith("/interview/capstone");
+  const isExercise = pathname?.startsWith("/interview/exercise");
 
   return (
     <header className={`w-full fixed top-0 left-0 z-50 transition-all duration-500 ease-in-out ${isScrolled ? "bg-[#FDFCF8]/80 backdrop-blur-xl border-b border-black/5 py-4" : "bg-transparent py-8 border-transparent"}`}>
@@ -45,18 +44,11 @@ export default function Navbar() {
           <span className={`text-[11px] font-medium transition-colors font-sans ${isDashboard ? 'text-terracotta' : 'text-gray-700 group-hover:text-terracotta'}`}>Roadmap</span>
         </Link>
         
-        <Link href="/day/14" className="flex flex-col items-center group min-w-[72px]">
+        <Link href="/interview/exercise" className="flex flex-col items-center group min-w-[72px]">
           <div className="w-10 h-10 mb-1 flex items-center justify-center">
-             <span className={`material-symbols-outlined text-[28px] font-light transition-colors ${isExam ? 'text-terracotta' : 'text-gray-700 group-hover:text-terracotta'}`}>quiz</span>
+             <span className={`material-symbols-outlined text-[28px] font-light transition-colors ${isExercise ? 'text-terracotta' : 'text-gray-700 group-hover:text-terracotta'}`}>terminal</span>
           </div>
-          <span className={`text-[11px] font-medium transition-colors font-sans ${isExam ? 'text-terracotta' : 'text-gray-700 group-hover:text-terracotta'}`}>Daily Exam</span>
-        </Link>
-        
-        <Link href="/interview/capstone" className="flex flex-col items-center group min-w-[72px]">
-          <div className="w-10 h-10 mb-1 flex items-center justify-center">
-             <span className={`material-symbols-outlined text-[28px] font-light transition-colors ${isCapstone ? 'text-terracotta' : 'text-gray-700 group-hover:text-terracotta'}`}>terminal</span>
-          </div>
-          <span className={`text-[11px] font-medium transition-colors font-sans ${isCapstone ? 'text-terracotta' : 'text-gray-700 group-hover:text-terracotta'}`}>Capstone</span>
+          <span className={`text-[11px] font-medium transition-colors font-sans ${isExercise ? 'text-terracotta' : 'text-gray-700 group-hover:text-terracotta'}`}>Exercise</span>
         </Link>
 
       </div>

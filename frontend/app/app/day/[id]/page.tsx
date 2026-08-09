@@ -7,10 +7,10 @@ export default function DPPPage() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   return (
-    <main className="w-full mx-auto px-4 sm:px-8 pt-8 pb-32 max-w-[1000px]">
+    <main className="relative w-full mx-auto px-4 sm:px-8 pt-48 pb-32 max-w-[1000px]">
       
       {/* Top Header */}
-      <header className="flex flex-col gap-4 mb-16">
+      <header className="fixed top-8 left-0 right-0 w-full max-w-[1400px] mx-auto px-8 z-[60]">
         <div className="flex justify-between items-center w-full">
           <Link href="/dashboard" className="text-terracotta hover:underline text-sm font-medium flex items-center gap-1 font-sans">
              <span className="material-symbols-outlined text-[16px]">chevron_left</span> Back to Roadmap
@@ -26,7 +26,7 @@ export default function DPPPage() {
       <section className="flex flex-col gap-16">
         
         {/* Question Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-6">
+        <div className="text-center max-w-3xl mx-auto space-y-6 mt-16">
           <span className="text-sm font-bold uppercase tracking-widest text-terracotta font-sans">Question 4 of 12</span>
           <h1 className="font-serif text-espresso font-bold tracking-tight" style={{ fontSize: '48px', lineHeight: '1.2' }}>
             Which search strategy uses a controller RNN to sample child architectures?

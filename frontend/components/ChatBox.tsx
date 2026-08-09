@@ -24,6 +24,11 @@ export default function ChatBox({ messages, isWaiting, onSendMessage, score = 88
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [streamedContent, setStreamedContent] = useState<string>("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
+
+  useEffect(() => {
+    setCurrentTime(`Today ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -76,7 +81,7 @@ export default function ChatBox({ messages, isWaiting, onSendMessage, score = 88
     <>
       <div className="flex-1 overflow-y-auto px-8 py-6 flex flex-col gap-6 pb-32 bg-white relative z-0">
         <div className="text-center font-sans text-[11px] font-semibold text-gray-400 uppercase tracking-widest my-2">
-            Today 10:42 AM
+            {currentTime}
         </div>
         
         {messages.map((msg, index) => {

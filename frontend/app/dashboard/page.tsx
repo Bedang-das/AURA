@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlayCircle } from "lucide-react";
+import curriculumData from "@/data/curriculum.json";
 
 export default function DashboardPage() {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
@@ -23,145 +24,131 @@ export default function DashboardPage() {
         
         <div className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar">
           
-          {/* Completed Day 12 */}
-          <div 
-            onClick={() => setSelectedCard(12)}
-            className="snap-start shrink-0 w-[320px] min-h-[400px] bg-white border border-gray-200/50 rounded-[2rem] p-10 flex flex-col hover:-translate-y-2 hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 ease-out cursor-pointer"
-          >
-            <div className="flex-grow">
-              <span className="text-xs font-bold uppercase tracking-wider text-sage">Day 12</span>
-              <h3 className="font-serif text-xl font-bold text-espresso mt-4 leading-tight tracking-tight">
-                Transformers & Attention
-              </h3>
-              <p className="text-sm text-[#57534E] mt-3">
-                Learn the core mechanics of self-attention and how transformers revolutionized sequence modeling.
-              </p>
-            </div>
+          {curriculumData.days.map((dayData: any) => {
+            const isCompleted = dayData.day < 14;
+            const isActive = dayData.day === 14;
+            const isLocked = dayData.day > 14;
             
-            <AnimatePresence>
-              {selectedCard === 12 && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+            const description = Array.isArray(dayData.objectives) && dayData.objectives.length > 0 
+              ? dayData.objectives[0] 
+              : "Technical concepts and foundations.";
+            
+            if (isCompleted) {
+              return (
+                <div 
+                  key={dayData.day}
+                  onClick={() => setSelectedCard(dayData.day)}
+                  className="snap-start shrink-0 w-[320px] min-h-[400px] bg-white border border-gray-200/50 rounded-[2rem] p-10 flex flex-col hover:-translate-y-2 hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 ease-out cursor-pointer"
                 >
-                  <Link href="/learn/12">
-                    <div className="mt-6 pt-4 border-t border-black/5 flex items-center gap-2 text-[#CC6644] font-medium transition-all">
-                      <PlayCircle className="w-5 h-5" /> 
-                      <span>Get Started</span>
-                    </div>
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Completed Day 13 */}
-          <div 
-            onClick={() => setSelectedCard(13)}
-            className="snap-start shrink-0 w-[320px] min-h-[400px] bg-white border border-gray-200/50 rounded-[2rem] p-10 flex flex-col hover:-translate-y-2 hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 ease-out cursor-pointer"
-          >
-            <div className="flex-grow">
-              <span className="text-xs font-bold uppercase tracking-wider text-sage">Day 13</span>
-              <h3 className="font-serif text-xl font-bold text-espresso mt-4 leading-tight tracking-tight">
-                Transfer Learning & Fine-Tuning
-              </h3>
-              <p className="text-sm text-[#57534E] mt-3">
-                Understand how to adapt pre-trained models to new domains efficiently and safely.
-              </p>
-            </div>
+                  <div className="flex-grow">
+                    <span className="text-xs font-bold uppercase tracking-wider text-sage">Day {dayData.day}</span>
+                    <h3 className="font-serif text-xl font-bold text-espresso mt-4 leading-tight tracking-tight">
+                      {dayData.title}
+                    </h3>
+                    <p className="text-sm text-[#57534E] mt-3">
+                      {description}
+                    </p>
+                  </div>
+                  
+                  <AnimatePresence>
+                    {selectedCard === dayData.day && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                      >
+                        <Link href={`/learn/${dayData.day}`}>
+                          <div className="mt-6 pt-4 border-t border-black/5 flex items-center gap-2 text-[#CC6644] font-medium transition-all">
+                            <PlayCircle className="w-5 h-5" /> 
+                            <span>Get Started</span>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
             
-            <AnimatePresence>
-              {selectedCard === 13 && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+            if (isActive) {
+              return (
+                <div 
+                  key={dayData.day}
+                  onClick={() => setSelectedCard(dayData.day)}
+                  className="snap-start shrink-0 w-[320px] min-h-[400px] bg-espresso rounded-[2rem] p-10 flex flex-col group hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(217,119,87,0.25)] transition-all duration-400 ease-out cursor-pointer relative overflow-hidden"
                 >
-                  <Link href="/learn/13">
-                    <div className="mt-6 pt-4 border-t border-black/5 flex items-center gap-2 text-[#CC6644] font-medium transition-all">
-                      <PlayCircle className="w-5 h-5" /> 
-                      <span>Get Started</span>
-                    </div>
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Active Day 14 */}
-          <div 
-            onClick={() => setSelectedCard(14)}
-            className="snap-start shrink-0 w-[320px] min-h-[400px] bg-espresso rounded-[2rem] p-10 flex flex-col group hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(217,119,87,0.25)] transition-all duration-400 ease-out cursor-pointer relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-terracotta/20 blur-[80px] rounded-full pointer-events-none group-hover:bg-terracotta/30 group-hover:scale-110 transition-all duration-500"></div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-terracotta/20 blur-[80px] rounded-full pointer-events-none group-hover:bg-terracotta/30 group-hover:scale-110 transition-all duration-500"></div>
+                  
+                  <div className="relative z-10 flex-grow">
+                    <span className="text-xs font-bold uppercase tracking-wider text-terracotta">Up Next Today</span>
+                    <h3 className="font-serif text-xl font-bold text-white mt-4 leading-tight tracking-tight">
+                      {dayData.title}
+                    </h3>
+                    <p className="text-sm text-gray-300 mt-3 font-sans">
+                      {description}
+                    </p>
+                  </div>
+                  
+                  <AnimatePresence>
+                    {selectedCard === dayData.day && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="relative z-10"
+                      >
+                        <Link href={`/learn/${dayData.day}`}>
+                          <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-2 text-[#CC6644] font-medium transition-all">
+                            <PlayCircle className="w-5 h-5" /> 
+                            <span>Get Started</span>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
             
-            <div className="relative z-10 flex-grow">
-              <span className="text-xs font-bold uppercase tracking-wider text-terracotta">Up Next Today</span>
-              <h3 className="font-serif text-xl font-bold text-white mt-4 leading-tight tracking-tight">
-                Neural Architecture Search
-              </h3>
-              <p className="text-sm text-gray-300 mt-3 font-sans">
-                Dive into automated techniques for designing optimal neural network architectures.
-              </p>
-            </div>
-            
-            <AnimatePresence>
-              {selectedCard === 14 && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="relative z-10"
-                >
-                  <Link href="/learn/14">
-                    <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-2 text-[#CC6644] font-medium transition-all">
-                      <PlayCircle className="w-5 h-5" /> 
-                      <span>Get Started</span>
-                    </div>
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Locked Day 15 */}
-          <div 
-            onClick={() => setSelectedCard(15)}
-            className="snap-start shrink-0 w-[320px] min-h-[400px] bg-paper-variant rounded-[2rem] p-10 flex flex-col opacity-80 border border-gray-200/50 cursor-pointer"
-          >
-            <div className="flex-grow">
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Day 15</span>
-              <h3 className="font-serif text-xl font-bold text-gray-700 mt-4 leading-tight tracking-tight">
-                Model Context Protocol (MCP)
-              </h3>
-              <p className="text-sm text-[#57534E] mt-3">
-                Explore the standardized protocol for connecting AI models to context sources.
-              </p>
-            </div>
-            
-            <AnimatePresence>
-              {selectedCard === 15 && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                >
-                  <Link href="/learn/15">
-                    <div className="mt-6 pt-4 border-t border-black/5 flex items-center gap-2 text-[#CC6644] font-medium transition-all">
-                      <PlayCircle className="w-5 h-5" /> 
-                      <span>Get Started</span>
-                    </div>
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
+            // isLocked
+            return (
+              <div 
+                key={dayData.day}
+                onClick={() => setSelectedCard(dayData.day)}
+                className="snap-start shrink-0 w-[320px] min-h-[400px] bg-paper-variant rounded-[2rem] p-10 flex flex-col opacity-80 border border-gray-200/50 cursor-pointer"
+              >
+                <div className="flex-grow">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Day {dayData.day}</span>
+                  <h3 className="font-serif text-xl font-bold text-gray-700 mt-4 leading-tight tracking-tight">
+                    {dayData.title}
+                  </h3>
+                  <p className="text-sm text-[#57534E] mt-3">
+                    {description}
+                  </p>
+                </div>
+                
+                <AnimatePresence>
+                  {selectedCard === dayData.day && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                      <Link href={`/learn/${dayData.day}`}>
+                        <div className="mt-6 pt-4 border-t border-black/5 flex items-center gap-2 text-[#CC6644] font-medium transition-all">
+                          <PlayCircle className="w-5 h-5" /> 
+                          <span>Get Started</span>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -197,7 +184,7 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined text-[40px] text-espresso font-light">school</span>
             </div>
             <h3 className="font-serif text-[28px] font-bold text-espresso tracking-tight mb-2">Expert Level</h3>
-            <p className="text-[15px] text-gray-500 font-medium leading-relaxed font-sans">Ready for Capstone Interview Phase 3.</p>
+            <p className="text-[15px] text-gray-500 font-medium leading-relaxed font-sans">Ready for Exercise Phase 3.</p>
           </div>
         </div>
       </section>

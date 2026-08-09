@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from google import genai
-from mcp.server.fastmcp import FastMCP # Ensure you ran: pip install mcp
+from fastmcp import FastMCP
 from database import init_db, save_session, load_session
 import config
 
@@ -57,8 +57,11 @@ def evaluate_answer(answer: str, objective: str) -> str:
         f"Objective: {objective}\n"
         f"Answer: {answer}"
     )
-    response = client.models.generate_content(model='gemini-3.6-flash', contents=critic_prompt)
-    return response.text.strip().removeprefix("```json").removesuffix("```").strip()
+    try:
+        response = client.models.generate_content(model='gemini-3.6-flash', contents=critic_prompt)
+        return response.text.strip().removeprefix("```json").removesuffix("```").strip()
+    except Exception as e:
+        return '{"score": 5.0, "justification": "Evaluation skipped due to high API load.", "mapped_objective": "Rate Limited", "confidence": "Low"}'
 import ast
 
 # --- THE CODE INSPECTOR TOOL (Second FastMCP Tool) ---
@@ -89,8 +92,11 @@ def evaluate_code_snippet(code: str, expected_topic: str) -> str:
         f"Code Snippet:\n{code}"
     )
     
-    response = client.models.generate_content(model='gemini-3.6-flash', contents=inspector_prompt)
-    return response.text.strip().removeprefix("```json").removesuffix("```").strip()
+    try:
+        response = client.models.generate_content(model='gemini-3.6-flash', contents=inspector_prompt)
+        return response.text.strip().removeprefix("```json").removesuffix("```").strip()
+    except Exception as e:
+        return '{"score": 5.0, "syntax_valid": ' + str(syntax_valid).lower() + ', "justification": "Code inspection skipped due to high API load.", "improvement_tip": "N/A"}'
 # --- PYDANTIC MODELS ---
 class StartRequest(BaseModel):
     sessionId: str
@@ -135,12 +141,15 @@ async def start_interview(req: StartRequest):
         "Keep your tone professional, empathetic, and conversational. Do not evaluate their past answers."
     )
     
-    response = client.models.generate_content(model='gemini-3.6-flash', contents=dreamer_prompt)
-    q1 = response.text
+    try:
+        response = client.models.generate_content(model='gemini-3.6-flash', contents=dreamer_prompt)
+        reply = response.text
+    except Exception as e:
+        reply = f"AURA System is currently overloaded. Please wait a minute and try again. ({str(e)})"
     
-    save_session(req.sessionId, req.candidateId, target_days, [first_day], [{"role": "model", "content": q1}], 1)
+    save_session(req.sessionId, req.candidateId, target_days, [first_day], [{"role": "model", "content": reply}], 1)
     
-    return {"reply": q1, "targetDays": target_days}
+    return {"reply": reply, "targetDays": target_days}
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
@@ -202,8 +211,12 @@ async def chat(req: ChatRequest):
             f"Transcript History:\n{json.dumps(session['history'])}\n"
             "ACTION: Thank the candidate crisp and professionally, acknowledge their overall technical efforts neutrally, and close the assessment. Do NOT ask any further questions."
         )
-        response = client.models.generate_content(model='gemini-3.6-flash', contents=wrap_up_prompt)
-        final_reply = response.text
+        try:
+            response = client.models.generate_content(model='gemini-3.6-flash', contents=wrap_up_prompt)
+            final_reply = response.text
+        except Exception:
+            final_reply = "The interview is complete. Thank you for your time."
+            
         session["history"].append({"role": "model", "content": final_reply})
         
         save_session(
@@ -251,8 +264,12 @@ async def chat(req: ChatRequest):
         "ACTION: First, briefly teach or reinforce a core concept based on the difficulty directive. Then, ask ONE technical question to test their understanding."
     )
     
-    response = client.models.generate_content(model='gemini-3.6-flash', contents=dreamer_turn_prompt)
-    next_question = response.text
+    try:
+        response = client.models.generate_content(model='gemini-3.6-flash', contents=dreamer_turn_prompt)
+        next_question = response.text
+    except Exception as e:
+        next_question = f"System error. Please continue with your thoughts on the previous topic. ({str(e)})"
+        
     session["history"].append({"role": "model", "content": next_question})
     
     save_session(

@@ -5,18 +5,14 @@ export default function Navbar() {
     <nav className="w-full bg-paper z-50 sticky top-0 flex flex-col items-center">
       
       {/* Tier 2: The Store Header */}
-      <div className="w-full max-w-[1400px] px-8 pt-10 pb-6 flex justify-between items-end">
-        <h1 className="text-[40px] font-serif font-bold text-espresso tracking-tight leading-none">
+      <div className="w-full max-w-[1400px] px-8 pt-12 pb-6 flex justify-center items-center opacity-0 animate-slide-up">
+        <h1 className="text-7xl font-serif font-bold text-espresso tracking-tight leading-none text-center mx-auto w-full">
           Aura.
         </h1>
-        <div className="flex flex-col items-end text-sm">
-          <span className="text-gray-500 font-medium font-sans">The best way to prepare for AI engineering.</span>
-          <Link href="#" className="text-terracotta hover:underline font-sans">Need help? Ask a Specialist</Link>
-        </div>
       </div>
 
       {/* Tier 3: Product Icon Sub-nav */}
-      <div className="w-full max-w-[1400px] px-8 pb-10 flex space-x-12 overflow-x-auto hide-scrollbar">
+      <div className="w-full max-w-[1400px] px-8 pb-10 flex justify-center space-x-12 overflow-x-auto hide-scrollbar mx-auto opacity-0 animate-slide-up delay-100">
         
         <Link href="/dashboard" className="flex flex-col items-center group min-w-[72px]">
           <div className="w-16 h-16 mb-2 flex items-center justify-center">

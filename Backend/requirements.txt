@@ -1,5 +1,6 @@
 fastapi
 uvicorn
 pydantic
-mcp
+fastmcp
+google-genai
 python-dotenv

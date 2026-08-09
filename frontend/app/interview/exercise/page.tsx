@@ -24,7 +24,8 @@ export default function CapstoneInterviewPage() {
   useEffect(() => {
     const startInterview = async () => {
       try {
-        const res = await fetch("http://localhost:8000/start", {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const res = await fetch(`${apiUrl}/start`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId, candidateId })
@@ -55,7 +56,8 @@ export default function CapstoneInterviewPage() {
     setIsWaiting(true);
     
     try {
-      const res = await fetch("http://localhost:8000/chat", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${apiUrl}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId, message: newMessage.content })

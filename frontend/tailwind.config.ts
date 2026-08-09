@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       "colors": {
-        "paper": "#fdfaf6",
+        "paper": "#EAE7E0",
         "paper-variant": "#f4f1ed",
         "terracotta": "#d97757",
         "sage": "#849D8C",
